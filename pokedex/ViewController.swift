@@ -22,6 +22,8 @@ class ViewController: UIViewController , UICollectionViewDelegate , UICollection
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillResignActiveOrInactive:", name: UIApplicationWillResignActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "applicationWillResignActiveOrInactive:", name: UIApplicationDidBecomeActiveNotification, object: nil)
         
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
@@ -110,9 +112,24 @@ class ViewController: UIViewController , UICollectionViewDelegate , UICollection
         }
         
     }
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    
+    
+    func collectionView(collectisonView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
        return  self.inSearchMode ? self.filteredPokemons.count : self.pokemons.count
+        
+    }
+    
+    func applicationWillResignActiveOrInactive(notification :NSNotification){
+       
+        if notification.name == UIApplicationDidBecomeActiveNotification{
+            if !musicPlayer.playing{
+            musicPlayer.play()
+            }
+        }
+        else if notification.name == UIApplicationWillResignActiveNotification{
+            musicPlayer.stop()
+        }
     }
    
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int{
